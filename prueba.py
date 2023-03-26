@@ -1,20 +1,23 @@
 def minTime(machines, goal):
-    from decimal import Decimal
-    machines.sort()
     sum_mach = sum(1/x for x in machines)
-    days = (goal/sum_mach)       
-    cont = 1
-    print(days)
-    while True:
-        cont += 1
-        if cont == 100: break
-        min_mac = min([x - (days % x) for x in machines]) 
-        sum_day = sum(days//x for x in machines)
-        if sum_day >= goal:
-            break              
-        else: days += min_mac
-        print(sum_day)
-    return(int(days)) 
+    days = [1, int(goal/sum_mach)]      
+    n = 1
+    print(days[-1])
+    while True:               
+        sum_prod = sum(days[-1]//x for x in machines)
+        prom = ((goal-sum_prod)/2)**n;   
+        min_mac = min([x - (days[-1] % x) for x in machines]) * prom
+        if sum_prod >= goal:
+            if prom == 1:
+                break 
+            else:
+                days[-1] = days[-2]
+                n = 0                     
+        else: 
+            days.append(days[-1]+min_mac)            
+        print(prom, sum_prod)        
+    return(int(days[-1])) 
+    
 
 with open("Archivo//datos.txt","r") as dat:
     machines = list(map(int, dat.readline().split()))
